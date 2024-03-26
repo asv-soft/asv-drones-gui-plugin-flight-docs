@@ -16,7 +16,7 @@ public class FlightZoneMapWidgetViewModel : MapWidgetBase
 {
     private readonly ILocalizationService _loc;
     
-    public const string UriString = "asv:shell.page.map.flight-zone.anchors-editor";
+    public const string UriString = $"{FlightDocsWellKnownUri.PageMapFlightZone}.anchors-editor";
     private ReadOnlyObservableCollection<FlightZoneAnchor> _anchors;
     private IFlightZoneMap _flightZoneMap;
     

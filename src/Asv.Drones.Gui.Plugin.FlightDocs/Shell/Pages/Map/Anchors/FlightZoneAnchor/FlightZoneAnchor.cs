@@ -11,7 +11,7 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class FlightZoneAnchor : MapAnchorBase
 {
     public FlightZoneAnchor(string id, GeoPoint point, int order, ILocalizationService loc) : base(
-        new Uri($"{FlightZoneMapViewModel.UriString}layer/ruler/{id}"))
+        new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerRuler.FormatWith(id)))
     {
         Size = 48;
         OffsetX = OffsetXEnum.Center;

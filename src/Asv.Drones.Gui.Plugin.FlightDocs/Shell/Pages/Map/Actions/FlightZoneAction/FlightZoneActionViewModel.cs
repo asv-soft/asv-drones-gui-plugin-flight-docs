@@ -19,7 +19,7 @@ public class FlightZoneActionViewModel : MapActionBase
     private int _order;
     
     [ImportingConstructor]
-    public FlightZoneActionViewModel(ILocalizationService loc, ILogService log) : base("asv:shell.page.map.action.flight-zone")
+    public FlightZoneActionViewModel(ILocalizationService loc, ILogService log) : base(FlightDocsWellKnownUri.PageMapActionsFlightZone)
     {
         _loc = loc;
         _log = log;

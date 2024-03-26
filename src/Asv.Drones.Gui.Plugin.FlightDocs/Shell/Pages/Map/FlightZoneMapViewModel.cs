@@ -38,7 +38,7 @@ public class FlightZoneMapViewModelConfig
 [ExportShellPage(UriString)]
 public class FlightZoneMapViewModel : MapPageViewModel, IFlightZoneMap
 {
-    public const string UriString = "asv:shell.page.map.flight-zone";
+    public const string UriString = $"{FlightDocsWellKnownUri.PageMapFlightZone}";
     public static readonly Uri Uri = new(UriString);
 
     private readonly SourceList<IMapAnchor> _flightZoneAnchors = new();

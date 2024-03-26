@@ -12,21 +12,21 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class FlightZonePolygon : MapAnchorBase
 {
     private readonly ReadOnlyObservableCollection<GeoPoint> _path;
-    private readonly SourceList<IMapAnchor> _cache = new ();
+    private readonly SourceList<IMapAnchor> _cache = new();
     private IFlightZoneMap _flightZoneMap;
-    
-    public FlightZonePolygon() : base(new Uri(FlightZoneMapViewModel.UriString + "/layer/flight-zone-polygon"))
+
+    public FlightZonePolygon() : base(new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerZonePolygon))
     {
         ZOrder = -1000;
         OffsetX = 0;
         OffsetY = 0;
         PathOpacity = 0.6;
         StrokeThickness = 5;
-        Stroke = new SolidColorBrush(Color.FromRgb(255,255,255));
-        Fill = new SolidColorBrush(Color.FromArgb(80,255, 255, 255));
+        Stroke = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+        Fill = new SolidColorBrush(Color.FromArgb(80, 255, 255, 255));
         IsFilled = true;
         IsVisible = true;
-        StrokeDashArray = new AvaloniaList<double>(2,2);
+        StrokeDashArray = new AvaloniaList<double>(2, 2);
 
         _cache.Connect()
             .Transform(_ => _.Location)
@@ -39,7 +39,7 @@ public class FlightZonePolygon : MapAnchorBase
     {
         base.InternalWhenMapLoaded(map);
         _flightZoneMap = (FlightZoneMapViewModel)map;
-        
+
         _flightZoneMap.FlightZoneAnchors.Connect()
             .OnItemAdded(_ => UpdatePath())
             .OnItemRemoved(_ => UpdatePath())
@@ -51,10 +51,11 @@ public class FlightZonePolygon : MapAnchorBase
 
     private void UpdatePath()
     {
-        var items = _flightZoneMap.FlightZoneAnchors.Items.Where(x => x.GetType() != typeof(FlightZonePolygon)).ToArray();
+        var items = _flightZoneMap.FlightZoneAnchors.Items.Where(x => x.GetType() != typeof(FlightZonePolygon))
+            .ToArray();
         _cache.Clear();
         _cache.AddRange(items);
     }
-    
+
     public override ReadOnlyObservableCollection<GeoPoint> Path => _path;
 }

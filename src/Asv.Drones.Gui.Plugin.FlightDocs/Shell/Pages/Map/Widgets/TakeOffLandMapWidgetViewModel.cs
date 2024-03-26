@@ -17,7 +17,7 @@ public class TakeOffLandMapWidgetViewModel : MapWidgetBase
     private ReadOnlyObservableCollection<TakeOffLandAnchor> _anchors;
     private IFlightZoneMap _flightZoneMap;
 
-    public const string UriString = "asv:shell.page.map.flight-zone.take-off-land";
+    public const string UriString = $"{FlightDocsWellKnownUri.PageMapFlightZone}.take-off-land";
     
     public TakeOffLandMapWidgetViewModel() : base(new Uri(UriString))
     {

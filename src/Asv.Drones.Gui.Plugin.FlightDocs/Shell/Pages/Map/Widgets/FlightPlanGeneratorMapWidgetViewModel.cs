@@ -32,7 +32,7 @@ public class RegNumber
 
 public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
 {
-    public const string UriString = "asv:shell.page.map.flight-zone.flight-plan";
+    public const string UriString = $"{FlightDocsWellKnownUri.PageMapFlightZone}.flight-plan";
     private FlightZoneMapViewModel _flightZoneMap;
     private readonly ILocalizationService _loc;
     private readonly FlightPlanConfig _flightPlanConfig;
