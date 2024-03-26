@@ -17,8 +17,9 @@ public class FlightPlanViewModel : ViewModelBase, IShellPage
     {
         Result = result;
     }
-
-    [Reactive] public string Result { get; set; }
+    
+    [Reactive]
+    public string Result { get; set; }
 
     public void SetArgs(NameValueCollection args)
     {
