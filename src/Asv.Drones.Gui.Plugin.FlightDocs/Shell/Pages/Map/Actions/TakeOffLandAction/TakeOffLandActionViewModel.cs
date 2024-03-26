@@ -20,7 +20,7 @@ public class TakeOffLandActionViewModel : MapActionBase
     private RxValue<GeoPoint?> _land = new ();
     
     [ImportingConstructor]
-    public TakeOffLandActionViewModel(ILocalizationService loc, ILogService log) : base("asv:shell.page.map.action.take-off-land")
+    public TakeOffLandActionViewModel(ILocalizationService loc, ILogService log) : base(FlightDocsWellKnownUri.PageMapActionsTakeOfLand)
     {
         _loc = loc;
         _log = log;

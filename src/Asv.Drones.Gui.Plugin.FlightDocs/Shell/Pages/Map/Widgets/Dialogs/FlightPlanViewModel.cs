@@ -10,8 +10,8 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 [ExportShellPage(UriString)]
 public class FlightPlanViewModel : ViewModelBase, IShellPage
 {
-    private const string UriString = FlightZoneMapViewModel.UriString + ".dialogs.flight-zone";
-        
+    private const string UriString = FlightDocsWellKnownUri.PageMapDialogs;
+
     [ImportingConstructor]
     public FlightPlanViewModel(string result) : base(new Uri(UriString))
     {
