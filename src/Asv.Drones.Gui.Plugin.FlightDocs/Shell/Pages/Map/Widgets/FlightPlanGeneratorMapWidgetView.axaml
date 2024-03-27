@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:flightDocs="clr-namespace:Asv.Drones.Gui.Plugin.FlightDocs"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:dateTime="clr-namespace:Asv.Avalonia.Toolkit.UI.Controls.DateTime;assembly=Asv.Avalonia.Toolkit"
              mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="550"
              x:Class="Asv.Drones.Gui.Plugin.FlightDocs.FlightPlanGeneratorMapWidgetView"
              x:DataType="flightDocs:FlightPlanGeneratorMapWidgetViewModel">
@@ -18,7 +19,7 @@
             </StackPanel>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_StartTime_Title}" TextWrapping="Wrap" Grid.Column="0" />
-                <TimePicker Grid.Column="2" SelectedTime="{CompiledBinding FlightStartTime.TimeOfDay}" />
+                <dateTime:StretchableTimePicker Grid.Column="2" HorizontalAlignment="Stretch" SelectedTime="{CompiledBinding FlightStartTime}" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_MinAlt_Title}" TextWrapping="NoWrap" Grid.Column="0" />
@@ -38,11 +39,11 @@
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightTime_Title}" TextWrapping="NoWrap" Grid.Column="0" />
-                <TextBox Text="{CompiledBinding FlightTime}" Grid.Column="2" />
+                <TextBox Text="{CompiledBinding FlightTime}"  Grid.Column="2" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightDate_Title}" TextWrapping="NoWrap" Grid.Column="0" />
-                <CalendarDatePicker Grid.Column="2" SelectedDate="{CompiledBinding FlightStartTime.Date}" />
+                <dateTime:StretchableDatePicker Grid.Column="2"  SelectedDate="{CompiledBinding FlightStartDate}" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_AirportCode_Title}" TextWrapping="NoWrap" Grid.Column="0" />
