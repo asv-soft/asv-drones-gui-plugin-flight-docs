@@ -19,7 +19,7 @@
             </StackPanel>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_StartTime_Title}" TextWrapping="Wrap" Grid.Column="0" />
-                <TimePicker Grid.Column="2" SelectedTime="{CompiledBinding FlightStartTime.TimeOfDay}" />
+                <dateTime:StretchableTimePicker Grid.Column="2" HorizontalAlignment="Stretch" SelectedTime="{CompiledBinding FlightStartTime}" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_MinAlt_Title}" TextWrapping="NoWrap" Grid.Column="0" />
@@ -39,11 +39,11 @@
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightTime_Title}" TextWrapping="NoWrap" Grid.Column="0" />
-                <TextBox Text="{CompiledBinding FlightTime}" Grid.Column="2" />
+                <TextBox Text="{CompiledBinding FlightTime}"  Grid.Column="2" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightDate_Title}" TextWrapping="NoWrap" Grid.Column="0" />
-                <dateTime:StretchableDatePicker Grid.Column="2" SelectedDate="{CompiledBinding FlightStartTime.Date}" />
+                <dateTime:StretchableDatePicker Grid.Column="2"  SelectedDate="{CompiledBinding FlightStartDate}" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_AirportCode_Title}" TextWrapping="NoWrap" Grid.Column="0" />

@@ -7,15 +7,18 @@ using FluentAvalonia.UI.Controls;
 using Material.Icons;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
+using ReactiveUI.Validation.Extensions;
 
 namespace Asv.Drones.Gui.Plugin.FlightDocs;
 
 public class FlightPlanConfig
 {
-    public DateTimeOffset FlightStartTime { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset FlightStartDate { get; set; } = DateTimeOffset.Now;
+
+    public TimeSpan FlightStartTime { get; set; } = DateTimeOffset.Now.TimeOfDay;
     public int FlightMinAltitude { get; set; }
     public int FlightMaxAltitude { get; set; }
-    public double FlightTime { get; set; }
+    public double? FlightTime { get; set; }
     public string AirportCode { get; set; }
     public string CompanyName { get; set; }
     public List<RegNumber> RegNumbers { get; set; } = new();
@@ -56,10 +59,10 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         #region Load From Config
 
         _flightPlanConfig = cfg.Get<FlightPlanConfig>();
-            
+        FlightStartDate = _flightPlanConfig.FlightStartDate;
         FlightStartTime = _flightPlanConfig.FlightStartTime;
-        FlightMinAltitude = _flightPlanConfig.FlightMinAltitude;
-        FlightMaxAltitude = _flightPlanConfig.FlightMaxAltitude;
+        FlightMinAltitude = _flightPlanConfig.FlightMinAltitude.ToString();
+        FlightMaxAltitude = _flightPlanConfig.FlightMaxAltitude.ToString();
         FlightTime = _flightPlanConfig.FlightTime;
         AirportCode = _flightPlanConfig.AirportCode;
         CompanyName = _flightPlanConfig.CompanyName;
@@ -93,9 +96,10 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
 
     private void SaveToCfg()
     {
+        _flightPlanConfig.FlightStartDate = FlightStartDate;
         _flightPlanConfig.FlightStartTime = FlightStartTime;
-        _flightPlanConfig.FlightMinAltitude = FlightMinAltitude;
-        _flightPlanConfig.FlightMaxAltitude = FlightMaxAltitude;
+        _flightPlanConfig.FlightMinAltitude = int.Parse(FlightMinAltitude);
+        _flightPlanConfig.FlightMaxAltitude = int.Parse(FlightMaxAltitude);
         _flightPlanConfig.FlightTime = FlightTime;
         _flightPlanConfig.AirportCode = AirportCode;
         _flightPlanConfig.CompanyName = CompanyName;
@@ -190,10 +194,10 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         }
 
         var resultString = "(SHR-ZZZZZ\n" +
-                           $"-ZZZZ{FlightStartTime.TimeOfDay:hhmm}\n" +
+                           $"-ZZZZ{FlightStartTime:hhmm}\n" +
                            $"-M{FlightMinAltitude:0000}/M{FlightMaxAltitude:0000} /ZONA {flightZone.Trim()}/\n" +
                            $"-ZZZZ{FlightTime}\n" +
-                           $"-DOF/{FlightStartTime.Date:yymmdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} доп. инфо.: {AdditionalInfo} ОПЕРАТОР БВС {UavOperatorName}, ВЫСОТА: {Altitude}. {regNumbersWithUavs.Trim()}";
+                           $"-DOF/{FlightStartDate.Date:yyMMdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} доп. инфо.: {AdditionalInfo} ОПЕРАТОР БВС {UavOperatorName}, ВЫСОТА: {Altitude}. {regNumbersWithUavs.Trim()}";
 
         var dialog = new ContentDialog()
         {
@@ -207,13 +211,15 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     }
     
     [Reactive]
-    public DateTimeOffset FlightStartTime { get; set; } = DateTimeOffset.Now;
+    public DateTimeOffset FlightStartDate { get; set; } = DateTimeOffset.Now;
+    [Reactive] 
+    public TimeSpan FlightStartTime { get; set; } = DateTimeOffset.Now.TimeOfDay;
     [Reactive]
-    public int FlightMinAltitude { get; set; }
+    public string FlightMinAltitude { get; set; }
     [Reactive]
-    public int FlightMaxAltitude { get; set; }
+    public string FlightMaxAltitude { get; set; }
     [Reactive]
-    public double FlightTime { get; set; }
+    public double? FlightTime { get; set; }
     [Reactive]
     public string AirportCode { get; set; }
     [Reactive]
