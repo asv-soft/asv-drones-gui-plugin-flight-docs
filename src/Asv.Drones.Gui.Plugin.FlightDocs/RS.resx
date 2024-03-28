@@ -111,4 +111,7 @@
     <data name="FlightPlanViewModel_PrimaryButtonText" xml:space="preserve">
         <value>Ok</value>
     </data>
+    <data name="FlightPlanGeneratorMapWidgetViewModel_Validation" xml:space="preserve">
+        <value>Value must be a number  &gt; 0</value>
+    </data>
 </root>

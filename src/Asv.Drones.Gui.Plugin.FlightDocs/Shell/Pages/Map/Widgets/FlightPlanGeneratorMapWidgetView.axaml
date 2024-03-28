@@ -39,7 +39,7 @@
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightTime_Title}" TextWrapping="NoWrap" Grid.Column="0" />
-                <TextBox Text="{CompiledBinding FlightTime}"  Grid.Column="2" />
+                <TextBox Text="{CompiledBinding FlightTimeString}"  Grid.Column="2" />
             </Grid>
             <Grid ColumnDefinitions="*, 10, 2*">
                 <TextBlock Text="{x:Static flightDocs:RS.FlightPlanGeneratorMapWidgetView_FlightDate_Title}" TextWrapping="NoWrap" Grid.Column="0" />

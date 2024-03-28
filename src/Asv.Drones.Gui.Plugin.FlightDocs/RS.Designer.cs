@@ -204,6 +204,15 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value must be a number  &gt; 0.
+        /// </summary>
+        public static string FlightPlanGeneratorMapWidgetViewModel_Validation {
+            get {
+                return ResourceManager.GetString("FlightPlanGeneratorMapWidgetViewModel_Validation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string FlightPlanViewModel_PrimaryButtonText {
