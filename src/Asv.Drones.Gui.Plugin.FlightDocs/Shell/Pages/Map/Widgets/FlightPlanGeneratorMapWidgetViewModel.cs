@@ -43,6 +43,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     private readonly ILocalizationService _loc;
     private readonly FlightPlanConfig _flightPlanConfig;
     private readonly IConfiguration _cfg;
+    private bool _isChanged;
 
     public FlightPlanGeneratorMapWidgetViewModel() : base(new Uri(UriString))
     {
@@ -95,17 +96,20 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         SaveToCfgCommand = ReactiveCommand.Create(SaveToCfg);
 
         #endregion
+        
+        
+            this.WhenValueChanged(vm => vm.FlightTimeString).Subscribe(v =>
+            {
+                if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result))
+                {
+                    FlightTime = result;
+                }
+            }).DisposeItWith(Disposable);
 
-        this.WhenValueChanged(vm => vm.FlightTimeString).Subscribe(v =>
-        {
-            if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result)) FlightTime = result;
-        }).DisposeItWith(Disposable);
-
-        this.WhenValueChanged(vm => vm.FlightTime).Subscribe(v =>
-        {
-            FlightTimeString = v.ToString(CultureInfo.InvariantCulture);
-        }).DisposeItWith(Disposable);
-
+            this.WhenValueChanged(vm => vm.FlightTime).Subscribe(v =>
+            {
+                FlightTimeString = v.ToString(CultureInfo.InvariantCulture);
+            }).DisposeItWith(Disposable);
 
         #region Validation
 
@@ -164,6 +168,34 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     protected override void InternalAfterMapInit(IMap context)
     {
         _flightZoneMap = (FlightZoneMapViewModel)context;
+        this.WhenValueChanged(vm => vm.RegNumbers).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.AirportCode).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.CompanyName).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.AdditionalInfo).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.Altitude).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.UavOperatorName).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.VrMrNumber).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightStartDate).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightMaxAltitude).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightMinAltitude).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightStartDate).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightTime).Subscribe(_ => _flightZoneMap.IsChanged = true)
+            .DisposeItWith(Disposable);
+        _flightZoneMap.WhenValueChanged(vm => vm.IsChangeSave).Subscribe(v =>
+        {
+            if (v) SaveToCfg();
+        });
     }
 
     public static string PrintLatitude(double latitude)

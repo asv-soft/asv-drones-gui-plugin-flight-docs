@@ -5,6 +5,8 @@ using Asv.Drones.Gui.Api;
 using Avalonia.Controls;
 using DynamicData;
 using DynamicData.Binding;
+using FluentAvalonia.UI.Controls;
+using ReactiveUI.Fody.Helpers;
 
 namespace Asv.Drones.Gui.Plugin.FlightDocs;
 
@@ -128,10 +130,42 @@ public class FlightZoneMapViewModel : MapPageViewModel, IFlightZoneMap
             var takeOffLandAnchor = (TakeOffLandAnchor)anchor;
             _flightConfig.TakeOffLandAnchors.Add(new TakeOffLandPoint() {Location = takeOffLandAnchor.Location, Name = takeOffLandAnchor.Name, TakeOffLand = takeOffLandAnchor.TakeOffLand});
         }
-            
         _cfg.Set(_flightConfig);
+        IsChanged = false;
     }
-
+    
+    public override async Task<bool> TryClose()
+    {
+        if (!IsChanged) return true;
+        var dialog = new ContentDialog()
+        {
+            Title = RS.FlightZoneMapViewModel_DataLossDialog_Title,
+            Content = RS.FlightZoneMapViewModel_DataLossDialog_Content,
+            IsSecondaryButtonEnabled = true,
+            PrimaryButtonText = RS.FlightZoneMapViewModel_DataLossDialog_PrimaryButtonText,
+            SecondaryButtonText = RS.FlightZoneMapViewModel_DataLossDialog_SecondaryButtonText,
+            CloseButtonText = RS.FlightZoneMapViewModel_DataLossDialog_CloseButtonText
+        };
+        var result = await dialog.ShowAsync();
+        switch (result)
+        {
+            case ContentDialogResult.Primary:
+                IsChangeSave = true;
+                SaveToCfg();
+                return true;
+            case ContentDialogResult.Secondary:
+                return true;
+            case ContentDialogResult.None:
+                return false;
+            default:
+                return true;
+        }
+    }
+    
+    [Reactive]
+    public  bool IsChanged { get; set; }
+    [Reactive]
+    public bool IsChangeSave { get; set; }
     public SourceList<IMapAnchor> FlightZoneAnchors => _flightZoneAnchors;
     public SourceList<IMapAnchor> TakeOffLandAnchors => _takeOffLandAnchors;
 }
