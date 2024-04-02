@@ -81,6 +81,7 @@ public class FlightZoneMapViewModel : MapPageViewModel, IFlightZoneMap
         {
             _takeOffLandAnchors.Add(new TakeOffLandAnchor(Guid.NewGuid().ToString(), t.Location, t.TakeOffLand, loc)
                 { Name = t.Name });
+            IsChanged = true;
         }
 
         _flightZoneAnchors.Add(new FlightZonePolygon());
@@ -145,6 +146,10 @@ public class FlightZoneMapViewModel : MapPageViewModel, IFlightZoneMap
 
     public override async Task<bool> TryClose()
     {
+        foreach (var item in _flightConfig.FlightZoneAnchors)
+        {
+            if (_flightZoneAnchors.Items.FirstOrDefault(_=>_.Location.Equals(item.Location)) == null) IsChanged = true;
+        }
         if (!IsChanged) return true;
         var dialog = new ContentDialog()
         {
