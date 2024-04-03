@@ -146,9 +146,10 @@ public class FlightZoneMapViewModel : MapPageViewModel, IFlightZoneMap
 
     public override async Task<bool> TryClose()
     {
-        foreach (var item in _flightConfig.FlightZoneAnchors)
+        if (_flightConfig.FlightZoneAnchors.Count != _flightZoneAnchors.Items.Count(_ => _ is FlightZoneAnchor)) IsChanged = true;
+        foreach (var item in _flightZoneAnchors.Items.Where(_=>_ is FlightZoneAnchor))
         {
-            if (_flightZoneAnchors.Items.FirstOrDefault(_=>_.Location.Equals(item.Location)) == null) IsChanged = true;
+            if (_flightConfig.FlightZoneAnchors.FirstOrDefault(_=>_.Location.Equals(item.Location)) == null) IsChanged = true;
         }
         if (!IsChanged) return true;
         var dialog = new ContentDialog()
