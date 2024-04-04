@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Composition;
 using System.Globalization;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Windows.Input;
 using Asv.Cfg;
 using Asv.Common;
@@ -43,6 +46,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     private readonly ILocalizationService _loc;
     private readonly FlightPlanConfig _flightPlanConfig;
     private readonly IConfiguration _cfg;
+    private bool _isChanged;
 
     public FlightPlanGeneratorMapWidgetViewModel() : base(new Uri(UriString))
     {
@@ -84,28 +88,36 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         #region Commands
 
         GenerateFlightPlanCommand = ReactiveCommand.Create(GenerateFlightPlan);
-        AddRegNumberCommand = ReactiveCommand.Create(() => RegNumbers.Add(new RegNumber()));
+        AddRegNumberCommand = ReactiveCommand.Create(() =>
+        {
+            RegNumbers.Add(new RegNumber());
+            _flightZoneMap.IsChanged = true;
+        });
         RemoveRegNumberCommand = ReactiveCommand.Create(() =>
         {
             if (RegNumbers.Count > 0)
             {
                 RegNumbers.Remove(RegNumbers.Last());
+                _flightZoneMap.IsChanged = true;
             }
         });
         SaveToCfgCommand = ReactiveCommand.Create(SaveToCfg);
 
         #endregion
 
+
         this.WhenValueChanged(vm => vm.FlightTimeString).Subscribe(v =>
         {
-            if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result)) FlightTime = result;
+            if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result))
+            {
+                FlightTime = result;
+            }
         }).DisposeItWith(Disposable);
 
         this.WhenValueChanged(vm => vm.FlightTime).Subscribe(v =>
         {
             FlightTimeString = v.ToString(CultureInfo.InvariantCulture);
         }).DisposeItWith(Disposable);
-
 
         #region Validation
 
@@ -127,7 +139,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         this.ValidationRule(x => x.FlightTime,
             _ => !string.IsNullOrWhiteSpace(_.ToString()),
             RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
-        
+
         this.ValidationRule(_ => _.FlightTimeString, _ =>
         {
             double.TryParse(_, out var result);
@@ -151,7 +163,6 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         {
             _flightPlanConfig.RegNumbers.Add(regNumber);
         }
-
         _flightPlanConfig.VrMrNumber = VrMrNumber;
         _flightPlanConfig.AdditionalInfo = AdditionalInfo;
         _flightPlanConfig.UavOperatorName = UavOperatorName;
@@ -164,7 +175,74 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     protected override void InternalAfterMapInit(IMap context)
     {
         _flightZoneMap = (FlightZoneMapViewModel)context;
+        
+        this.WhenValueChanged(vm => vm.AirportCode).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.AirportCode != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.CompanyName).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.CompanyName != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.AdditionalInfo).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.AdditionalInfo != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.Altitude).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.Altitude != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.UavOperatorName).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.UavOperatorName != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.VrMrNumber).Subscribe(_ =>
+            {
+                if (_flightPlanConfig.VrMrNumber != _) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightStartDate).Subscribe(_ =>
+            {
+                if (!_flightPlanConfig.FlightStartDate.Equals(_)) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightMaxAltitude).Subscribe(_ =>
+            {
+                if (string.IsNullOrWhiteSpace(_)) return;
+                if (!_loc.Altitude.IsValid(_)) return;
+                if (_flightPlanConfig.FlightMaxAltitude != int.Parse(_)) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightMinAltitude).Subscribe(_ =>
+            {
+                if (_.IsNullOrWhiteSpace()) return;
+                if (!_loc.Altitude.IsValid(_)) return;
+                if (_flightPlanConfig.FlightMinAltitude != int.Parse(_)) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightStartTime).Subscribe(_ =>
+            {
+                if (!_flightPlanConfig.FlightStartTime.Equals(_)) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightTime).Subscribe(_ =>
+            {
+                if (Math.Abs(_flightPlanConfig.FlightTime - _) > 0) _flightZoneMap.IsChanged = true;
+            })
+            .DisposeItWith(Disposable);
+
+        _flightZoneMap.WhenValueChanged(vm => vm.IsChangeSave).Subscribe(v =>
+        {
+            if (v) SaveToCfg();
+        });
     }
+    
+
 
     public static string PrintLatitude(double latitude)
     {
@@ -178,7 +256,6 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
             minutes++;
             seconds -= 60;
         }
-
         return $"{degrees:00}{minutes:00}{seconds:00}{(latitude < 0 ? "S" : "N")}";
     }
 
@@ -194,7 +271,6 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
             minutes++;
             seconds -= 60;
         }
-
         return $"{degrees:000}{minutes:00}{seconds:00}{(longitude < 0 ? "W" : "E")}";
     }
 
