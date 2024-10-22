@@ -17,6 +17,24 @@
         <PackageLicenseUrl>https://github.com/asv-soft/asv-drones-gui-plugin-flight-docs?tab=MIT-1-ov-file#readme</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/asv-soft/asv-drones-gui-plugin-flight-docs</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <WarningsAsErrors>
+            CS0169,
+            CS0618,
+            CS1502,
+            CS1503,
+            CS8524,
+            CS8600,
+            CS8601,
+            CS8602,
+            CS8603,
+            CS8604,
+            CS8625,
+            CS8629,
+            CS8762,
+            CA1851,
+        </WarningsAsErrors>
+        <NoWarn>
+        </NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
