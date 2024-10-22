@@ -1,6 +1,4 @@
-<div align="center">
- <img src="img/asv-soft-logo.png" width="300px">
-</div>
+![linkedin](https://github.com/user-attachments/assets/4fa5221e-7ae5-4b6b-98a8-1c1e39b49afb)>
 
 # **Asv.Drones.Gui.Plugin.FlightDocs**
 
