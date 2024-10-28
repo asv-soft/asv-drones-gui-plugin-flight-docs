@@ -195,11 +195,38 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to add. info.:.
+        /// </summary>
+        public static string FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo {
+            get {
+                return ResourceManager.GetString("FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ALTITUDE.
+        /// </summary>
+        public static string FlightPlanGeneratorMapWidgetViewModel_Altitude {
+            get {
+                return ResourceManager.GetString("FlightPlanGeneratorMapWidgetViewModel_Altitude", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Flight Plan Text Generator.
         /// </summary>
         public static string FlightPlanGeneratorMapWidgetViewModel_Title {
             get {
                 return ResourceManager.GetString("FlightPlanGeneratorMapWidgetViewModel_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UAV OPERATOR.
+        /// </summary>
+        public static string FlightPlanGeneratorMapWidgetViewModel_UavOperator {
+            get {
+                return ResourceManager.GetString("FlightPlanGeneratorMapWidgetViewModel_UavOperator", resourceCulture);
             }
         }
         

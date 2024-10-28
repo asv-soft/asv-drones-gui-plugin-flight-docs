@@ -1,20 +1,20 @@
 ﻿using System.Composition;
 using Asv.Cfg;
 using Asv.Drones.Gui.Api;
-using NLog;
+using Microsoft.Extensions.Logging;
 
 namespace Asv.Drones.Gui.Plugin.FlightDocs;
 
 [PluginEntryPoint("FlightDocs")]
 [Shared]
-public class PluginEntryPoint : IPluginEntryPoint
+public class FlightDocsPlugin : IPluginEntryPoint
 {
-    Logger _log = LogManager.GetCurrentClassLogger();
+    private ILogger _log;
     
     [ImportingConstructor]
-    public PluginEntryPoint(IConfiguration cfg, IApplicationHost host)
+    public FlightDocsPlugin(ILoggerFactory factory, IConfiguration cfg, IApplicationHost host)
     {
-        
+      _log = factory.CreateLogger<FlightDocsPlugin>();
     }
     public async void Initialize()
     {

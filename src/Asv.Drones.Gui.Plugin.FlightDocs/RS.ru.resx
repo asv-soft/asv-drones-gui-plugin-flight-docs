@@ -129,4 +129,13 @@
     <data name="FlightZoneMapViewModel_DataLossDialog_CloseButtonText" xml:space="preserve">
         <value>Отмена</value>
     </data>
+    <data name="FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo" xml:space="preserve">
+        <value>доп. инфо.:</value>
+    </data>
+    <data name="FlightPlanGeneratorMapWidgetViewModel_UavOperator" xml:space="preserve">
+        <value>ОПЕРАТОР БВС</value>
+    </data>
+    <data name="FlightPlanGeneratorMapWidgetViewModel_Altitude" xml:space="preserve">
+        <value>ВЫСОТА</value>
+    </data>
 </root>

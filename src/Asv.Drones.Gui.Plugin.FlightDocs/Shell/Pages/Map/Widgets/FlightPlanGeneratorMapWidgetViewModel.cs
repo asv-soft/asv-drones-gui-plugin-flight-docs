@@ -319,7 +319,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
                            $"-ZZZZ{FlightStartTime:hhmm}\n" +
                            $"-M{FlightMinAltitude:0000}/M{FlightMaxAltitude:0000} /ZONA {flightZone.Trim()}/\n" +
                            $"-ZZZZ{FlightTime}\n" +
-                           $"-DOF/{FlightStartDate.Date:yyMMdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} доп. инфо.: {AdditionalInfo} ОПЕРАТОР БВС {UavOperatorName}, ВЫСОТА: {Altitude}. {regNumbersWithUavs.Trim()}";
+                           $"-DOF/{FlightStartDate.Date:yyMMdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} {RS.FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo} {AdditionalInfo} {RS.FlightPlanGeneratorMapWidgetViewModel_UavOperator}: {UavOperatorName}, {RS.FlightPlanGeneratorMapWidgetViewModel_Altitude}: {Altitude}. {regNumbersWithUavs.Trim()}";
 
         var dialog = new ContentDialog()
         {
