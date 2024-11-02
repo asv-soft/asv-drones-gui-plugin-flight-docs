@@ -8,7 +8,9 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class FlightZoneMapActionProvider : ViewModelProviderBase<IMapAction>
 {
     [ImportingConstructor]
-    public FlightZoneMapActionProvider([ImportMany(FlightZoneMapViewModel.UriString)]IEnumerable<IMapAction> items)
+    public FlightZoneMapActionProvider(
+        [ImportMany(FlightZoneMapViewModel.UriString)] IEnumerable<IMapAction> items
+    )
     {
         Source.AddOrUpdate(items);
     }

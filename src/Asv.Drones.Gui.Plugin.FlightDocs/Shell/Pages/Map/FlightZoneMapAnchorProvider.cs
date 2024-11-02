@@ -9,14 +9,12 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class FlightZoneMapAnchorProvider : ViewModelProviderBase<IMapAnchor>
 {
     [ImportingConstructor]
-    public FlightZoneMapAnchorProvider()
-    {
-        
-    }
+    public FlightZoneMapAnchorProvider() { }
 
     public void Update(SourceList<IMapAnchor> anchors)
     {
-        anchors.Connect()
+        anchors
+            .Connect()
             .OnItemAdded(_ => Source.AddOrUpdate(_))
             .OnItemRemoved(_ => Source.Remove(_))
             .Subscribe()

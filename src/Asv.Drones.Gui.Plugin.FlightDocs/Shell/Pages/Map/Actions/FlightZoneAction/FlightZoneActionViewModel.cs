@@ -11,15 +11,16 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 [Export(FlightZoneMapViewModel.UriString, typeof(IMapAction))]
 public class FlightZoneActionViewModel : MapActionBase
 {
-    private CancellationTokenSource _cancellationTokenSource = new ();
+    private CancellationTokenSource _cancellationTokenSource = new();
     private readonly ILocalizationService _loc;
     private readonly ILogService _log;
     private bool _awaitingNextPoint;
     private IFlightZoneMap _flightZoneMap;
     private int _order;
-    
+
     [ImportingConstructor]
-    public FlightZoneActionViewModel(ILocalizationService loc, ILogService log) : base(FlightDocsWellKnownUri.PageMapActionsFlightZone)
+    public FlightZoneActionViewModel(ILocalizationService loc, ILogService log)
+        : base(FlightDocsWellKnownUri.PageMapActionsFlightZone)
     {
         _loc = loc;
         _log = log;
@@ -30,7 +31,7 @@ public class FlightZoneActionViewModel : MapActionBase
             .Subscribe(SetUpFlightZone)
             .DisposeItWith(Disposable);
     }
-    
+
     protected override void InternalWhenMapLoaded(IMap context)
     {
         base.InternalWhenMapLoaded(context);
@@ -40,33 +41,46 @@ public class FlightZoneActionViewModel : MapActionBase
 
     private async void SetUpFlightZone(bool isVisible)
     {
-        if (Map == null) return;
-
-        if (isVisible)
+        if (Map == null)
         {
-            while (IsEditModeEnabled)
-            {
-                try
-                {
-                    _awaitingNextPoint = true;
-                    var point = await Map.ShowTargetDialog(RS.FlightZoneActionViewModel_SelectPoint_Title, _cancellationTokenSource.Token);
-                    _order = _flightZoneMap.FlightZoneAnchors.Count - 1;
-                    _order++;
-                    _flightZoneMap.FlightZoneAnchors.Add(new FlightZoneAnchor(Guid.NewGuid().ToString(), point, _order, _loc));
-                }
-                catch (OperationCanceledException e)
-                {
-                    _log.Warning(e.Source, e.Message);
-                }
-            }
+            return;
         }
-        else if (!isVisible && _awaitingNextPoint)
+
+        if (!isVisible)
         {
-            _cancellationTokenSource.Cancel();
+            if (isVisible || !_awaitingNextPoint)
+            {
+                return;
+            }
+
+            await _cancellationTokenSource.CancelAsync();
             _cancellationTokenSource.Dispose();
             Map.IsInDialogMode = false;
             _awaitingNextPoint = false;
             _cancellationTokenSource = new CancellationTokenSource();
+
+            return;
+        }
+
+        while (IsEditModeEnabled)
+        {
+            try
+            {
+                _awaitingNextPoint = true;
+                var point = await Map.ShowTargetDialog(
+                    RS.FlightZoneActionViewModel_SelectPoint_Title,
+                    _cancellationTokenSource.Token
+                );
+                _order = _flightZoneMap.FlightZoneAnchors.Count - 1;
+                _order++;
+                _flightZoneMap.FlightZoneAnchors.Add(
+                    new FlightZoneAnchor(Guid.NewGuid().ToString(), point, _order, _loc)
+                );
+            }
+            catch (OperationCanceledException e)
+            {
+                _log.Warning(e.Source ?? "error has no source", e.Message);
+            }
         }
     }
 

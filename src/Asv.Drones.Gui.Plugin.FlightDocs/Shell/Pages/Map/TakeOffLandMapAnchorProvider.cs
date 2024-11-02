@@ -9,13 +9,12 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class TakeOffLandMapAnchorProvider : ViewModelProviderBase<IMapAnchor>
 {
     [ImportingConstructor]
-    public TakeOffLandMapAnchorProvider()
-    {
-    }
+    public TakeOffLandMapAnchorProvider() { }
 
     public void Update(SourceList<IMapAnchor> anchors)
     {
-        anchors.Connect()
+        anchors
+            .Connect()
             .OnItemAdded(_ => Source.AddOrUpdate(_))
             .OnItemRemoved(_ => Source.Remove(_))
             .Subscribe()

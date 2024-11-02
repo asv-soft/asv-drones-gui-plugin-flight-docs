@@ -7,7 +7,8 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 [Export(typeof(IShellMenuItem))]
 public class FlightZoneShellMenuItem : ShellMenuItem
 {
-    public FlightZoneShellMenuItem() : base($"{WellKnownUri.ShellMenu}.flight-docs")
+    public FlightZoneShellMenuItem()
+        : base($"{WellKnownUri.ShellMenu}.flight-docs")
     {
         Name = RS.FlightZoneShellMenuItem_Header_Title;
         NavigateTo = FlightZoneMapViewModel.Uri;

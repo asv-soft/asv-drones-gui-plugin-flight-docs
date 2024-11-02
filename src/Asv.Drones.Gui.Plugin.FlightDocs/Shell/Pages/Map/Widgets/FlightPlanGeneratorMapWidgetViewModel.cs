@@ -46,14 +46,13 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     private readonly ILocalizationService _loc;
     private readonly FlightPlanConfig _flightPlanConfig;
     private readonly IConfiguration _cfg;
-    private bool _isChanged;
 
-    public FlightPlanGeneratorMapWidgetViewModel() : base(new Uri(UriString))
-    {
-    }
+    public FlightPlanGeneratorMapWidgetViewModel()
+        : base(new Uri(UriString)) { }
 
     [ImportingConstructor]
-    public FlightPlanGeneratorMapWidgetViewModel(ILocalizationService loc, IConfiguration cfg) : this()
+    public FlightPlanGeneratorMapWidgetViewModel(ILocalizationService loc, IConfiguration cfg)
+        : this()
     {
         _loc = loc;
         _cfg = cfg;
@@ -106,45 +105,71 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         #endregion
 
 
-        this.WhenValueChanged(vm => vm.FlightTimeString).Subscribe(v =>
-        {
-            if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result))
+        this.WhenValueChanged(vm => vm.FlightTimeString)
+            .Subscribe(v =>
             {
-                FlightTime = result;
-            }
-        }).DisposeItWith(Disposable);
+                if (!string.IsNullOrWhiteSpace(v) & double.TryParse(v, out var result))
+                {
+                    FlightTime = result;
+                }
+            })
+            .DisposeItWith(Disposable);
 
-        this.WhenValueChanged(vm => vm.FlightTime).Subscribe(v =>
-        {
-            FlightTimeString = v.ToString(CultureInfo.InvariantCulture);
-        }).DisposeItWith(Disposable);
+        this.WhenValueChanged(vm => vm.FlightTime)
+            .Subscribe(v =>
+            {
+                FlightTimeString = v.ToString(CultureInfo.InvariantCulture);
+            })
+            .DisposeItWith(Disposable);
 
         #region Validation
 
-        this.ValidationRule(_ => _.FlightMinAltitude, _ =>
-        {
-            int.TryParse(_, CultureInfo.InvariantCulture, out var result);
-            return result > 0;
-        }, _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
+        this.ValidationRule(
+                _ => _.FlightMinAltitude,
+                _ =>
+                {
+                    int.TryParse(_, CultureInfo.InvariantCulture, out var result);
+                    return result > 0;
+                },
+                _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation
+            )
+            .DisposeItWith(Disposable);
 
-        this.ValidationRule(_ => _.FlightMaxAltitude, _ =>
-        {
-            int.TryParse(_, CultureInfo.InvariantCulture, out var result);
-            return result > 0;
-        }, _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
+        this.ValidationRule(
+                _ => _.FlightMaxAltitude,
+                _ =>
+                {
+                    int.TryParse(_, CultureInfo.InvariantCulture, out var result);
+                    return result > 0;
+                },
+                _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation
+            )
+            .DisposeItWith(Disposable);
 
-        this.ValidationRule(_ => _.FlightTime, _ => _ is > 0,
-            _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
+        this.ValidationRule(
+                _ => _.FlightTime,
+                _ => _ is > 0,
+                _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation
+            )
+            .DisposeItWith(Disposable);
 
-        this.ValidationRule(x => x.FlightTime,
-            _ => !string.IsNullOrWhiteSpace(_.ToString()),
-            RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
+        this.ValidationRule(
+                x => x.FlightTime,
+                _ => !string.IsNullOrWhiteSpace(_.ToString()),
+                RS.FlightPlanGeneratorMapWidgetViewModel_Validation
+            )
+            .DisposeItWith(Disposable);
 
-        this.ValidationRule(_ => _.FlightTimeString, _ =>
-        {
-            double.TryParse(_, out var result);
-            return result > 0;
-        }, _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation).DisposeItWith(Disposable);
+        this.ValidationRule(
+                _ => _.FlightTimeString,
+                _ =>
+                {
+                    double.TryParse(_, out var result);
+                    return result > 0;
+                },
+                _ => RS.FlightPlanGeneratorMapWidgetViewModel_Validation
+            )
+            .DisposeItWith(Disposable);
 
         #endregion
     }
@@ -159,10 +184,8 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         _flightPlanConfig.AirportCode = AirportCode;
         _flightPlanConfig.CompanyName = CompanyName;
         _flightPlanConfig.RegNumbers = new();
-        foreach (var regNumber in RegNumbers)
-        {
-            _flightPlanConfig.RegNumbers.Add(regNumber);
-        }
+        _flightPlanConfig.RegNumbers.AddRange(RegNumbers);
+
         _flightPlanConfig.VrMrNumber = VrMrNumber;
         _flightPlanConfig.AdditionalInfo = AdditionalInfo;
         _flightPlanConfig.UavOperatorName = UavOperatorName;
@@ -175,74 +198,137 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
     protected override void InternalAfterMapInit(IMap context)
     {
         _flightZoneMap = (FlightZoneMapViewModel)context;
-        
-        this.WhenValueChanged(vm => vm.AirportCode).Subscribe(_ =>
+
+        this.WhenValueChanged(vm => vm.AirportCode)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.AirportCode != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.AirportCode != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.CompanyName).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.CompanyName)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.CompanyName != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.CompanyName != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.AdditionalInfo).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.AdditionalInfo)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.AdditionalInfo != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.AdditionalInfo != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.Altitude).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.Altitude)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.Altitude != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.Altitude != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.UavOperatorName).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.UavOperatorName)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.UavOperatorName != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.UavOperatorName != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.VrMrNumber).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.VrMrNumber)
+            .Subscribe(_ =>
             {
-                if (_flightPlanConfig.VrMrNumber != _) _flightZoneMap.IsChanged = true;
+                if (_flightPlanConfig.VrMrNumber != _)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.FlightStartDate).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.FlightStartDate)
+            .Subscribe(_ =>
             {
-                if (!_flightPlanConfig.FlightStartDate.Equals(_)) _flightZoneMap.IsChanged = true;
+                if (!_flightPlanConfig.FlightStartDate.Equals(_))
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.FlightMaxAltitude).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.FlightMaxAltitude)
+            .Subscribe(_ =>
             {
-                if (string.IsNullOrWhiteSpace(_)) return;
-                if (!_loc.Altitude.IsValid(_)) return;
-                if (_flightPlanConfig.FlightMaxAltitude != int.Parse(_)) _flightZoneMap.IsChanged = true;
+                if (string.IsNullOrWhiteSpace(_))
+                {
+                    return;
+                }
+
+                if (!_loc.Altitude.IsValid(_))
+                {
+                    return;
+                }
+
+                if (_flightPlanConfig.FlightMaxAltitude != int.Parse(_))
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.FlightMinAltitude).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.FlightMinAltitude)
+            .Subscribe(_ =>
             {
-                if (_.IsNullOrWhiteSpace()) return;
-                if (!_loc.Altitude.IsValid(_)) return;
-                if (_flightPlanConfig.FlightMinAltitude != int.Parse(_)) _flightZoneMap.IsChanged = true;
+                if (string.IsNullOrWhiteSpace(_))
+                {
+                    return;
+                }
+
+                if (!_loc.Altitude.IsValid(_))
+                {
+                    return;
+                }
+
+                if (_flightPlanConfig.FlightMinAltitude != int.Parse(_))
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.FlightStartTime).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.FlightStartTime)
+            .Subscribe(_ =>
             {
-                if (!_flightPlanConfig.FlightStartTime.Equals(_)) _flightZoneMap.IsChanged = true;
+                if (!_flightPlanConfig.FlightStartTime.Equals(_))
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
-        this.WhenValueChanged(vm => vm.FlightTime).Subscribe(_ =>
+        this.WhenValueChanged(vm => vm.FlightTime)
+            .Subscribe(_ =>
             {
-                if (Math.Abs(_flightPlanConfig.FlightTime - _) > 0) _flightZoneMap.IsChanged = true;
+                if (Math.Abs(_flightPlanConfig.FlightTime - _) > 0)
+                {
+                    _flightZoneMap.IsChanged = true;
+                }
             })
             .DisposeItWith(Disposable);
 
-        _flightZoneMap.WhenValueChanged(vm => vm.IsChangeSave).Subscribe(v =>
-        {
-            if (v) SaveToCfg();
-        });
+        _flightZoneMap
+            .WhenValueChanged(vm => vm.IsChangeSave)
+            .Subscribe(v =>
+            {
+                if (v)
+                {
+                    SaveToCfg();
+                }
+            });
     }
-    
-
 
     public static string PrintLatitude(double latitude)
     {
@@ -256,6 +342,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
             minutes++;
             seconds -= 60;
         }
+
         return $"{degrees:00}{minutes:00}{seconds:00}{(latitude < 0 ? "S" : "N")}";
     }
 
@@ -271,6 +358,7 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
             minutes++;
             seconds -= 60;
         }
+
         return $"{degrees:000}{minutes:00}{seconds:00}{(longitude < 0 ? "W" : "E")}";
     }
 
@@ -282,8 +370,10 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         {
             if (anchor is FlightZoneAnchor flightZoneAnchor)
             {
-                flightZone += PrintLatitude(flightZoneAnchor.Location.Latitude) +
-                              PrintLongitude(flightZoneAnchor.Location.Longitude) + " ";
+                flightZone +=
+                    PrintLatitude(flightZoneAnchor.Location.Latitude)
+                    + PrintLongitude(flightZoneAnchor.Location.Longitude)
+                    + " ";
             }
         }
 
@@ -299,14 +389,18 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
 
         if (_flightZoneMap.TakeOffLandAnchors.Count > 0)
         {
-            takeOffPoint = PrintLatitude(_flightZoneMap.TakeOffLandAnchors.Items.First().Location.Latitude) +
-                           PrintLongitude(_flightZoneMap.TakeOffLandAnchors.Items.First().Location.Longitude);
+            takeOffPoint =
+                PrintLatitude(_flightZoneMap.TakeOffLandAnchors.Items.First().Location.Latitude)
+                + PrintLongitude(
+                    _flightZoneMap.TakeOffLandAnchors.Items.First().Location.Longitude
+                );
         }
 
         if (_flightZoneMap.TakeOffLandAnchors.Count > 1)
         {
-            landPoint = PrintLatitude(_flightZoneMap.TakeOffLandAnchors.Items.Last().Location.Latitude) +
-                        PrintLongitude(_flightZoneMap.TakeOffLandAnchors.Items.Last().Location.Longitude);
+            landPoint =
+                PrintLatitude(_flightZoneMap.TakeOffLandAnchors.Items.Last().Location.Latitude)
+                + PrintLongitude(_flightZoneMap.TakeOffLandAnchors.Items.Last().Location.Longitude);
         }
 
         var regNumbersWithUavs = string.Empty;
@@ -315,16 +409,17 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
             regNumbersWithUavs += $"БВС №{i + 1} {RegNumbers[i].RegistrationNumber} ";
         }
 
-        var resultString = "(SHR-ZZZZZ\n" +
-                           $"-ZZZZ{FlightStartTime:hhmm}\n" +
-                           $"-M{FlightMinAltitude:0000}/M{FlightMaxAltitude:0000} /ZONA {flightZone.Trim()}/\n" +
-                           $"-ZZZZ{FlightTime}\n" +
-                           $"-DOF/{FlightStartDate.Date:yyMMdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} {RS.FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo} {AdditionalInfo} {RS.FlightPlanGeneratorMapWidgetViewModel_UavOperator}: {UavOperatorName}, {RS.FlightPlanGeneratorMapWidgetViewModel_Altitude}: {Altitude}. {regNumbersWithUavs.Trim()}";
+        var resultString =
+            "(SHR-ZZZZZ\n"
+            + $"-ZZZZ{FlightStartTime:hhmm}\n"
+            + $"-M{FlightMinAltitude:0000}/M{FlightMaxAltitude:0000} /ZONA {flightZone.Trim()}/\n"
+            + $"-ZZZZ{FlightTime}\n"
+            + $"-DOF/{FlightStartDate.Date:yyMMdd} DEP/{takeOffPoint} DEST/{landPoint}EET/{AirportCode} TYP/BLA{RegNumbers.Count} OPR/{CompanyName} REG/{regNumbers} RMK/{VrMrNumber} {RS.FlightPlanGeneratorMapWidgetViewModel_AdditionalInfo} {AdditionalInfo} {RS.FlightPlanGeneratorMapWidgetViewModel_UavOperator}: {UavOperatorName}, {RS.FlightPlanGeneratorMapWidgetViewModel_Altitude}: {Altitude}. {regNumbersWithUavs.Trim()}";
 
         var dialog = new ContentDialog()
         {
             Title = RS.FlightPlanViewModel_Title,
-            PrimaryButtonText = RS.FlightPlanViewModel_PrimaryButtonText
+            PrimaryButtonText = RS.FlightPlanViewModel_PrimaryButtonText,
         };
 
         using var viewModel = new FlightPlanViewModel(resultString);
@@ -332,22 +427,57 @@ public class FlightPlanGeneratorMapWidgetViewModel : MapWidgetBase
         await dialog.ShowAsync();
     }
 
-    [Reactive] public DateTimeOffset FlightStartDate { get; set; } = DateTimeOffset.Now;
-    [Reactive] public TimeSpan FlightStartTime { get; set; } = DateTimeOffset.Now.TimeOfDay;
-    [Reactive] public string FlightMinAltitude { get; set; }
-    [Reactive] public string FlightMaxAltitude { get; set; }
-    [Reactive] private double FlightTime { get; set; }
-    [Reactive] public string FlightTimeString { get; set; }
-    [Reactive] public string AirportCode { get; set; }
-    [Reactive] public string CompanyName { get; set; }
-    [Reactive] public ObservableCollection<RegNumber> RegNumbers { get; set; }
-    [Reactive] public string VrMrNumber { get; set; }
-    [Reactive] public string AdditionalInfo { get; set; }
-    [Reactive] public string UavOperatorName { get; set; }
-    [Reactive] public string Altitude { get; set; }
-    [Reactive] public string AltitudeUnits { get; set; }
-    [Reactive] public ICommand GenerateFlightPlanCommand { get; set; }
-    [Reactive] public ICommand AddRegNumberCommand { get; set; }
-    [Reactive] public ICommand RemoveRegNumberCommand { get; set; }
-    [Reactive] public ICommand SaveToCfgCommand { get; set; }
+    [Reactive]
+    public DateTimeOffset FlightStartDate { get; set; } = DateTimeOffset.Now;
+
+    [Reactive]
+    public TimeSpan FlightStartTime { get; set; } = DateTimeOffset.Now.TimeOfDay;
+
+    [Reactive]
+    public string FlightMinAltitude { get; set; }
+
+    [Reactive]
+    public string FlightMaxAltitude { get; set; }
+
+    [Reactive]
+    private double FlightTime { get; set; }
+
+    [Reactive]
+    public string FlightTimeString { get; set; }
+
+    [Reactive]
+    public string AirportCode { get; set; }
+
+    [Reactive]
+    public string CompanyName { get; set; }
+
+    [Reactive]
+    public ObservableCollection<RegNumber> RegNumbers { get; set; }
+
+    [Reactive]
+    public string VrMrNumber { get; set; }
+
+    [Reactive]
+    public string AdditionalInfo { get; set; }
+
+    [Reactive]
+    public string UavOperatorName { get; set; }
+
+    [Reactive]
+    public string Altitude { get; set; }
+
+    [Reactive]
+    public string AltitudeUnits { get; set; }
+
+    [Reactive]
+    public ICommand GenerateFlightPlanCommand { get; set; }
+
+    [Reactive]
+    public ICommand AddRegNumberCommand { get; set; }
+
+    [Reactive]
+    public ICommand RemoveRegNumberCommand { get; set; }
+
+    [Reactive]
+    public ICommand SaveToCfgCommand { get; set; }
 }

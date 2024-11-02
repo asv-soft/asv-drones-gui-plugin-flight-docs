@@ -13,17 +13,16 @@ public class FlightPlanViewModel : ViewModelBase, IShellPage
     private const string UriString = FlightDocsWellKnownUri.PageMapDialogs;
 
     [ImportingConstructor]
-    public FlightPlanViewModel(string result) : base(new Uri(UriString))
+    public FlightPlanViewModel(string result)
+        : base(new Uri(UriString))
     {
         Result = result;
     }
-    
+
     [Reactive]
     public string Result { get; set; }
 
-    public void SetArgs(NameValueCollection args)
-    {
-    }
+    public void SetArgs(NameValueCollection args) { }
 
     public Task<bool> TryClose()
     {

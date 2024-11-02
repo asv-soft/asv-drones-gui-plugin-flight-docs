@@ -10,8 +10,8 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 
 public class FlightZoneAnchor : MapAnchorBase
 {
-    public FlightZoneAnchor(string id, GeoPoint point, int order, ILocalizationService loc) : base(
-        new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerRuler.FormatWith(id)))
+    public FlightZoneAnchor(string id, GeoPoint point, int order, ILocalizationService loc)
+        : base(new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerRuler.FormatWith(id)))
     {
         Size = 48;
         OffsetX = OffsetXEnum.Center;
@@ -27,14 +27,18 @@ public class FlightZoneAnchor : MapAnchorBase
         Order = order;
 
         this.WhenAnyValue(_ => _.Location, __ => __.Name)
-            .Subscribe(_ => Title = $"({Name}) {loc.Latitude.FromSiToStringWithUnits(Location.Latitude)}; " +
-                                    $"{loc.Longitude.FromSiToStringWithUnits(Location.Longitude)}; " +
-                                    $"{loc.Altitude.FromSiToStringWithUnits(Location.Altitude)}")
+            .Subscribe(_ =>
+                Title =
+                    $"({Name}) {loc.Latitude.FromSiToStringWithUnits(Location.Latitude)}; "
+                    + $"{loc.Longitude.FromSiToStringWithUnits(Location.Longitude)}; "
+                    + $"{loc.Altitude.FromSiToStringWithUnits(Location.Altitude)}"
+            )
             .DisposeItWith(Disposable);
     }
 
-    [Reactive] 
+    [Reactive]
     public string Name { get; set; }
+
     [Reactive]
     public int Order { get; set; }
 }

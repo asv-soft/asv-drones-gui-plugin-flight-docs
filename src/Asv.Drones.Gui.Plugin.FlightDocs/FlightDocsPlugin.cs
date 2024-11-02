@@ -10,30 +10,18 @@ namespace Asv.Drones.Gui.Plugin.FlightDocs;
 public class FlightDocsPlugin : IPluginEntryPoint
 {
     private ILogger _log;
-    
+
     [ImportingConstructor]
     public FlightDocsPlugin(ILoggerFactory factory, IConfiguration cfg, IApplicationHost host)
     {
-      _log = factory.CreateLogger<FlightDocsPlugin>();
-    }
-    public async void Initialize()
-    {
-       
-
+        _log = factory.CreateLogger<FlightDocsPlugin>();
     }
 
-    public void Init()
-    {
-        
-    }
+    public async void Initialize() { }
 
-    public void OnFrameworkInitializationCompleted()
-    {
-        
-    }
+    public void Init() { }
 
-    public void OnShutdownRequested()
-    {
-        
-    }
+    public void OnFrameworkInitializationCompleted() { }
+
+    public void OnShutdownRequested() { }
 }

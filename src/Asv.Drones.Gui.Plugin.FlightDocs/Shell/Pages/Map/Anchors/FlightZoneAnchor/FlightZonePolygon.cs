@@ -15,7 +15,8 @@ public class FlightZonePolygon : MapAnchorBase
     private readonly SourceList<IMapAnchor> _cache = new();
     private IFlightZoneMap _flightZoneMap;
 
-    public FlightZonePolygon() : base(new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerZonePolygon))
+    public FlightZonePolygon()
+        : base(new Uri(FlightDocsWellKnownUri.PageMapFlightZoneLayerZonePolygon))
     {
         ZOrder = -1000;
         OffsetX = 0;
@@ -28,7 +29,8 @@ public class FlightZonePolygon : MapAnchorBase
         IsVisible = true;
         StrokeDashArray = new AvaloniaList<double>(2, 2);
 
-        _cache.Connect()
+        _cache
+            .Connect()
             .Transform(_ => _.Location)
             .Bind(out _path)
             .Subscribe()
@@ -40,7 +42,8 @@ public class FlightZonePolygon : MapAnchorBase
         base.InternalWhenMapLoaded(map);
         _flightZoneMap = (FlightZoneMapViewModel)map;
 
-        _flightZoneMap.FlightZoneAnchors.Connect()
+        _flightZoneMap
+            .FlightZoneAnchors.Connect()
             .OnItemAdded(_ => UpdatePath())
             .OnItemRemoved(_ => UpdatePath())
             .WhenPropertyChanged(_ => _.Location)
@@ -51,7 +54,8 @@ public class FlightZonePolygon : MapAnchorBase
 
     private void UpdatePath()
     {
-        var items = _flightZoneMap.FlightZoneAnchors.Items.Where(x => x.GetType() != typeof(FlightZonePolygon))
+        var items = _flightZoneMap
+            .FlightZoneAnchors.Items.Where(x => x.GetType() != typeof(FlightZonePolygon))
             .ToArray();
         _cache.Clear();
         _cache.AddRange(items);
